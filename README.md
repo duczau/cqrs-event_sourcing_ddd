@@ -27,6 +27,55 @@ ACK Mode type - ack-mode
 | MANUAL | Gọi acknowledge() thủ công | Full control
 | MANUAL_IMMEDIATE| Gọi acknowledge() → commit ngay | Your config
 
+```
+acks: 0  # Fire and forget (không chờ ACK)
+┌──────────┐
+│ Producer │ ──Send──> Leader
+└──────────┘           (không đợi)
+💪 Fastest, ⚠️ Có thể mất data
+
+acks: 1  # Leader ACK (default)
+┌──────────┐
+│ Producer │ ──Send──> Leader ──ACK──> Producer
+└──────────┘           ↓
+                   (Replicas đang copy)
+⚖️ Balanced
+
+acks: all (hoặc -1)  # All ISR ACK
+┌──────────┐
+│ Producer │ ──Send──> Leader
+└──────────┘             ↓
+                     Replicate
+                         ↓
+                    All ISR ACK
+                         ↓
+                   ACK to Producer
+🛡️ Safest, 🐌 Slowest
+```
+
+```
+### ✅ Brokers TÁCH BIỆT về:
+- Dữ liệu vật lý (mỗi broker có disk riêng)
+- Process riêng biệt
+
+### ✅ Brokers KHÔNG TÁCH BIỆT về:
+- Metadata (chia sẻ qua Zookeeper)
+- Có thể replicate data cho nhau
+- Có thể forward requests
+
+### ✅ Partition Distribution:
+- Mỗi partition có 1 Leader trên 1 broker
+- Leader xử lý ALL read/write
+- Follower replicas trên brokers khác
+- Clients chỉ connect đến Leader
+
+### ✅ Communication:
+- Brokers không truy cập trực tiếp disk của nhau
+- Replication qua network (Follower fetch từ Leader)
+- Metadata sync qua Zookeeper
+- Controller quản lý cluster-wide operations
+```
+
 ```java
 @KafkaListener(topics = "orders", groupId = "bankaccConsumer")
 public void consume(
@@ -60,4 +109,7 @@ public void consume(
 // acknowledgment.acknowledge(); // → Commit NGAY LẬP TỨC
 ```
 
-### Kafka Producer flow
+### Kafka Producer
+### Kafka Consumer
+- Consumer do not read directly from the topic, but from a consumer group.
+- In a group, if there are 5 consumers, but there are only 3 partitions, only 3 consumers will be able to read from the topic, and the other 2 consumers will be idle.

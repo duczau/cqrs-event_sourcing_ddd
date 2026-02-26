@@ -27,6 +27,7 @@ services:
       - KAFKA_LISTENER=PLAINTEXT://:9092
       - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=false # optional (should have) Disable auto topic creation
+      - KAFKA_LOG_DIRS=/bitnami/kafka/logs # optional configure log directory
     depends_on:
       - zookeeper
 
