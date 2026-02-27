@@ -110,6 +110,11 @@ public void consume(
 ```
 
 ### Kafka Producer
+```kafka-console-producer --bootstrap-server kafka:9092 --topic az``` - send message with key = null
+
+```kafka-console-producer --bootstrap-server kafka:9092 --topic az --property "parse.key=true" --property "key.separator=:"``` - send message with key (must be > key:value)
 ### Kafka Consumer
+```kafka-console-consumer --bootstrap-server kafka:9092 --topic az --from-beginning --property print.key=true --property print.timestamp=true```
+
 - Consumer do not read directly from the topic, but from a consumer group.
 - In a group, if there are 5 consumers, but there are only 3 partitions, only 3 consumers will be able to read from the topic, and the other 2 consumers will be idle.
