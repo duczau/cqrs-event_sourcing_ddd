@@ -1,4 +1,6 @@
-package com.techbank.cqrs.core.messages;
+package com.techbank.cqrs.core.events;
+
+import com.techbank.cqrs.core.messages.Message;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +11,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public abstract class Message {
-    private String id;
+public abstract class BaseEvent extends Message {
+    private int version;
 }
