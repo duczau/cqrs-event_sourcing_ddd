@@ -10,7 +10,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/bankAccount?createDatabaseIfNotExist=true
     username: root
-    password: techbankRootPsw
+    password: root
   kafka:
     consumer:
       bootstrap-servers: localhost:9092

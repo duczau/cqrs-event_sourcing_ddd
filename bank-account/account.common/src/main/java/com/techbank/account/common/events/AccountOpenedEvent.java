@@ -1,6 +1,7 @@
 package com.techbank.account.common.events;
 
-import java.sql.Date;
+
+import java.util.Date;
 
 import com.techbank.account.common.dto.AccountType;
 import com.techbank.cqrs.core.events.BaseEvent;
